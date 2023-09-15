@@ -1,0 +1,33 @@
+﻿<%#
+	IMYFIT
+-%>
+
+<%
+	local version = 20220530
+	local disp = require "luci.dispatcher"
+	local request  = disp.context.path
+	local tree = disp.node()
+	local categories = disp.node_childs(tree)
+%>
+                </div>
+                <footer class="mobile-hide">
+			<p> <%= version %> </p>
+		   <% if #categories > 1 then %>
+                    <ul class="breadcrumb pull-right" id="modemenu">
+                        <% for i, r in ipairs(categories) do %>
+                        <li<% if request[1] == r then %> class="active"<%end%>><a href="<%=controller%>/<%=r%>/"><%=striptags(translate(tree.nodes[r].title))%></a> <span class="divider">|</span></li>
+                        <% end %>
+                    </ul>
+                    <% end %>
+                </footer>
+            </div>
+        </div>
+
+    <script>
+        // thanks for Jo-Philipp Wich <jow@openwrt.org>
+        var luciLocation = <%= luci.http.write_json(luci.dispatcher.context.path) %>;
+    </script>
+    <script src="<%=media%>/js/jquery.min.js?v=git-19.020.41695-6f6641d"></script>
+    <script src="<%=media%>/js/script.js?v=git-19.020.41695-6f6641d"></script>
+</body>
+</html>

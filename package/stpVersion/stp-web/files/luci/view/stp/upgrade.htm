@@ -1,0 +1,392 @@
+
+<%+header%>
+
+<script type="text/javascript">//<![CDATA[
+
+	(function() {
+		(new XHR()).post("<%=luci.dispatcher.build_url("admin", "services", "stp", "param")%>",
+			null, 
+			function(x, xhr) 
+			{
+				var mode = new Array();
+				mode[0] = "RANGING";
+				mode[1] = "TDOA";
+				mode[2] = "TOF";
+				var role = new Array();
+				role[0] = "MAIN";
+				role[1] = "AUX";
+				var clock = new Array();
+				clock[0] = "DISABLE";
+				clock[1] = "ENABLE";
+				if(xhr["data"]!=null) {
+					var data = xhr["data"];
+					
+					var imei = data.substring(data.indexOf("imei:")+5, data.indexOf(" dis:"));
+					var distance = data.substring(data.indexOf("dis:")+4, data.indexOf(" (m)"));
+					var m = data.substring(data.indexOf("mode:")+5, data.indexOf("mode:")+6);
+					var r = data.substring(data.indexOf("role:")+5, data.indexOf("role:")+6); 
+					var clk = data.substring(data.indexOf("clock:")+6, data.indexOf("clock:")+7);
+					var dimension = data.substring(data.indexOf("dimension:")+10, data.indexOf("dimension:")+11);
+					var panid = data.substring(data.indexOf("panid:")+6, data.indexOf("panid:")+8);
+					var version = data.substring(data.indexOf("version:")+8, data.indexOf("\"}"));
+					
+					if(imei==null) {
+						document.getElementById("_stp_imei").textContent = "Unkown";
+						document.getElementById("_stp_dis").textContent = "Unkown";
+						document.getElementById("_stp_mode").textContent = "Unkown";
+						document.getElementById("_stp_role").textContent = "Unkown";
+						document.getElementById("_stp_clock").textContent = "Unkown";
+						document.getElementById("_stp_dimension").textContent = "Unkown";
+						document.getElementById("_stp_panid").textContent = "Unkown";
+						document.getElementById("_stp_version").textContent = "Unkown";
+					} else {
+						document.getElementById("_stp_imei").textContent = imei;
+						document.getElementById("_stp_dis").textContent = distance + '(m)';
+						document.getElementById("_stp_mode").textContent = mode[m];
+						document.getElementById("_stp_role").textContent = role[r];
+						document.getElementById("_stp_clock").textContent = clock[clk];
+						document.getElementById("_stp_dimension").textContent = dimension;
+						document.getElementById("_stp_panid").textContent = panid;
+						document.getElementById("_stp_version").textContent = version;
+					}
+				}
+			});
+	}());
+	
+	function mode_click(btn)
+	{
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+		
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('mode-select');
+		
+		ul = ul + '/' + 'mode' + '/' + arg.value;
+		(new XHR()).post(ul, 
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				if(uresponse==null) {                                                                                                  
+						alert("timeout!");                                                                                             
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						var mode = new Array();
+						mode[0] = "RANGING";
+						mode[1] = "TDOA";
+						mode[2] = "TOF";
+						document.getElementById("_stp_mode").textContent = mode[uresponse.replace(/[^0-9]/ig,"")];
+						alert("set mode success!");
+				} else if(uresponse.match("success")==null) {
+						alert("set mode fail");  
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "width:100px;";
+			}
+		);
+		return false;
+	}
+
+	function distance_click(btn)
+	{
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('dis-input');
+		if(arg.value.replace(/(^\s*)|(\s*$)/g, '')=='')
+		{
+				alert("please input!");
+				return false;
+		}
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+		
+		ul = ul + '/' + 'distance' + '/' + arg.value;
+		(new XHR()).post(ul, 
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				//document.getElementById('_uwb_imei').textContent = xhr.responseText;
+				if(uresponse==null) {
+						alert("timeout!");
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						document.getElementById("_stp_dis").textContent = uresponse.replace(/[^0-9.]/ig,"") + '(m)'
+						alert("set distance success!");;
+				} else if(uresponse.match("success")==null) {
+						alert("set distance fail");
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "width:100px;";
+			}
+		);
+		return false;
+	}
+
+	
+	function dimension_click(btn)
+	{
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+		
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('dimension-select');
+		//{ act : 'query' },
+		ul = ul + '/' + 'dimension' + '/' + arg.value;
+		(new XHR()).post(ul, 
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				if(uresponse==null) {                                                                                                  
+						alert("timeout!");                                                                                             
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						document.getElementById("_stp_dimension").textContent = uresponse.replace(/[^0-9]/ig,"");
+						alert("set dimension success!");
+				} else if(uresponse.match("success")==null) {
+						alert("set dimension fail");  
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "width:100px;";
+			}
+		);
+		return false;
+	}
+	
+	function role_click(btn)
+	{
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+		
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('role-select');
+		//{ act : 'query' },
+		ul = ul + '/' + 'role' + '/' + arg.value;
+		(new XHR()).post(ul, 
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				if(uresponse==null) {                                                                                                  
+						alert("timeout!");                                                                                             
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						var role = new Array();
+						role[0] = "MAIN";
+						role[1] = "AUX";
+						document.getElementById("_stp_role").textContent = role[uresponse.replace(/[^0-9]/ig,"")];
+						alert("set role success!");
+				} else if(uresponse.match("success")==null) {
+						alert("set role fail");  
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "width:100px;";
+			}
+		);
+		return false;
+    }
+	
+	function clock_click(btn)
+	{
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('clock-select');
+
+
+		ul = ul + '/' + 'clock' + '/' + arg.value;
+		(new XHR()).post(ul,
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				if(uresponse==null) {
+						alert("timeout!");
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						var clock = new Array();
+						clock[0] = "DISABLE";
+						clock[1] = "ENABLE";
+						document.getElementById("_stp_clock").textContent = clock[uresponse.replace(/[^0-9]/ig,"")];
+						alert("set clock success!");
+				} else if(uresponse.match("success")==null) {
+						alert("set clock fail");
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "";
+			}
+		);
+		return false;
+	}
+	function panid_click(btn)
+	{
+		var ul = '<%=url('admin/services/stp/bt_action')%>';
+		var arg = document.getElementById('panid-input');
+		if(arg.value.replace(/(^\s*)|(\s*$)/g, '')=='')
+		{
+				alert("please input!");
+				return false;
+		}
+		btn.disabled = true;
+		//btn.style = "background:url('<%=resource%>/icons/loading.gif') no-repeat;center:top;border:none;text-indent:-1000px;width:200px;height:30px";
+		//btn.value    = '';
+		
+		ul = ul + '/' + 'panid' + '/' + arg.value;
+		(new XHR()).post(ul, 
+			null,
+			function(xhr)
+			{
+				var uresponse = xhr.responseText;
+				if(uresponse==null) {
+						alert("timeout!");
+				} else if(uresponse.match("fail")==null && uresponse.match("success")!=null) {
+						document.getElementById("_stp_panid").textContent = uresponse.replace(/[^0-9a-fA-F]/g,"").substring(6, 8);
+						alert("set panid success!");
+				} else if(uresponse.match("success")==null) {
+						alert("set panid fail");
+				}
+				btn.disabled = false;
+				//btn.value = '<%:Configuration%>';
+				//btn.style = "width:100px;";
+			}
+		);
+		return false;
+	}
+
+//]]></script>
+
+<h2 name="content"><%:Stp Operations%></h2>
+
+<div class="cbi-section">
+    <h3><%:Configuration parameters%></h3>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:IMEI%></label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:200px;" id="_stp_imei" for="image"><%:Collecting data...%></label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"></label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"></label></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="cbi-section-node">
+	
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:Distance%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_dis" for="image"><%:...%></label></div>
+				
+				<div class="td left"><input type="text" style="width:100px;" id="dis-input"></input></div>
+				<div class="td left"><input type="button" style="width:100px;" id="dis-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return distance_click(this)"></input></div>
+			</div>
+		</div>
+	
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:Mode%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_mode" for="image"><%:...%></label></div>
+				
+				<div class="td left"><select class="cbi-input-select" style="width:100px;" id="mode-select" name="mode-select">
+					<option value="0">RANGING</option>
+					<option value="1">TDOA</option>
+					<option value="2">TOF</option>
+				</select></div>
+				<div class="td left"><input type="button" style="width:100px;" id="distance-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return mode_click(this)"></div>
+			</div>
+		</div>
+	
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:Role%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_role" for="image"><%:...%></label></div>
+				
+				<div class="td left"><select class="cbi-input-select" style="width:100px;" id="role-select" name="role-select">
+					<option value="0">MAIN</option>
+					<option value="1">AUX</option>
+				</select></div>
+				<div class="td left"><input type="button" style="width:100px;" id="role-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return role_click(this)"></div>
+			</div>
+		</div>
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:Clock%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_clock" for="image"><%:...%></label></div>
+				
+				<div class="td left"><select class="cbi-input-select" style="width:100px;" id="clock-select" name="clock-select">
+					<option value="0">DISABLE</option>
+					<option value="1">ENABLE</option>
+				</select></div>
+				<div class="td left"><input type="button" style="width:100px;" id="clk-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return clock_click(this)"></div>
+			</div>
+		</div>
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:Dimension%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_dimension" for="image"><%:...%></label></div>
+				
+				<div class="td left"><select class="cbi-input-select" style="width:100px;" id="dimension-select" name="dimension-select">
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select></div>
+				<div class="td left"><input type="button" style="width:100px;" id="dimension-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return dimension_click(this)"></div>
+			</div>
+		</div>
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:panId(00~FF)%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" id="_stp_panid" for="image"><%:...%></label></div>
+				<div class="td left"><input type="text" style="width:100px;" id="panid-input"></input></div>
+				<div class="td left"><input type="button" style="width:100px;" id="panid-button" class="cbi-button cbi-button-apply" value="<%:Configuration%>" onclick="return panid_click(this)"></input></div>
+			</div>
+		</div>
+	</div>
+	<div class="cbi-section-node">
+		<div class="table">
+			<div class="tr">
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"><%:version%>:</label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:280px;" id="_stp_version" for="image"><%:...%></label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"></label></div>
+				<div class="td left"><label class="cbi-value-title" style="width:100px;" for="image"></label></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="cbi-section">
+	<h3><%:Flash new firmware image%></h3>
+		<form method="post" action="<%=url('admin/services/flashops/stupgrade')%>" enctype="multipart/form-data">
+			<input type="hidden" name="token" value="<%=token%>" />
+			<div class="cbi-section-descr"><%:Upload a upgrade-compatible firmware here to replace the running firmware.%> 
+			</div>
+			<div class="cbi-section-node">
+				<label class="cbi-value-title" for="image"><%:Firmware%>:</label>
+				<div class="cbi-value-field">
+					<input type="file" name="stimage" id="stimage" />
+					<input type="submit" class="cbi-button cbi-button-action important" value="<%:Flash image...%>" />
+				</div>
+			</div>
+		</form>
+</div>
+
+
+<%+footer%>
+

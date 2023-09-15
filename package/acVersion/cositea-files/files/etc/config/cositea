@@ -1,0 +1,2 @@
+config service firmware
+	option version '20200427'

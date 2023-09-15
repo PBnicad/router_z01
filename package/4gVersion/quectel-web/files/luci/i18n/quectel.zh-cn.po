@@ -1,0 +1,17 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "MQTT"
+msgstr "MQTT"
+
+msgid "General Setting"
+msgstr "基本设置"
+
+msgid "MQTT Host"
+msgstr "MQTT 主机"
+
+msgid "MQTT Port"
+msgstr "MQTT 端口"
+
+msgid "Firmware URL"
+msgstr "固件下载地址"

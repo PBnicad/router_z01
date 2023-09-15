@@ -1,0 +1,14 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+#r_mac=$(hexdump -v -n 6 -s $((0x4)) -e '5/1 "%02x:" 1/1 "%02x"' /dev/mtd2)
+## wan/lan automatic identification cfg
+#ip link add link eth0 eth2 type macvlan
+
+#ifconfig eth2 hw ether ${r_mac:0:1}e${r_mac:2:16}
+#ifconfig eth2 up
+#/etc/init.d/network restart
+
+# /etc/ppp/peers/quectel-pppd.sh
+
+exit 0

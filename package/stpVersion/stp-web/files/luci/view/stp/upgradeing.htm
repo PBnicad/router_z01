@@ -1,0 +1,50 @@
+<%#
+ Copyright 2008 Steven Barth <steven@midlink.org>
+ Copyright 2008 Jo-Philipp Wich <jow@openwrt.org>
+ Licensed to the public under the Apache License 2.0.
+-%>
+
+<%+header%>
+		<script type="text/javascript">//<![CDATA[
+			(function() {
+				XHR.poll(1, "<%=luci.dispatcher.build_url("admin", "services", "flashops", "progress")%>",
+					null, 
+					function(x, result)
+					{                                          
+						var uresponse = result["data"];
+						if(uresponse!=null) {
+							uresponse = uresponse.replace(/[^0-9.]/g,"");
+							var max  = uresponse.substring( 0, uresponse.indexOf("."));
+							
+							var value  = uresponse.substring(uresponse.indexOf(".")+1);
+							var pro = document.getElementById('progress');
+							pro.max = max/5000;
+							pro.value = value/5000;
+							if(max==value) {
+								alert("upgraded success!");
+							}
+						}
+					});
+			}());
+		//]]></script>
+	
+	<div class="main">
+		<div id="maincontainer">
+			<div id="maincontent" class="container">
+				<h2 name="content" id="upgradeing-container" ><%:Firmware%> - <%= title or translate("Upgraded...") %></h2>
+				<div class="cbi-section" id="upgradeing-section">
+					<div>
+						<%= msg or translate("Changes applied.") %>
+					</div>
+					<div>
+						<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" />
+						<%:Waiting for changes to be applied...%>
+						<input type="hidden" name="success" value="1" />  
+						<progress max='1' value='0' id="progress"> </progress>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<%+footer%>

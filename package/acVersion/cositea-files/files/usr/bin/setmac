@@ -1,0 +1,36 @@
+#!/bin/sh
+
+. /lib/functions/system.sh
+
+[ $# -ne 1 ] && {
+	echo "Usage: setmac <mac>"
+	exit 0
+}
+
+w_mac=$(macaddr_canonicalize "$1")
+[ -z "$w_mac" ] && {
+	echo "Invalid MAC address: $1"
+	exit 0
+}
+
+PART="/dev/mtd2"
+FACTORY_BIN="/tmp/factory.bin"
+
+# Create backup for factory partition
+dd if=${PART} of=${FACTORY_BIN} 2>/dev/null
+
+# Write MAC address
+real_mac="\x${w_mac:0:2}\x${w_mac:3:2}\x${w_mac:6:2}\x${w_mac:9:2}\x${w_mac:12:2}\x${w_mac:15:2}"
+printf "$real_mac" | dd of=${FACTORY_BIN} bs=1 count=6 seek=$((0x0004)) conv=notrunc 2>/dev/null
+
+mtd write ${FACTORY_BIN} factory 1>/dev/null 2>/dev/null
+
+# Double check
+r_mac=$(hexdump -v -n 6 -s $((0x4)) -e '5/1 "%02x:" 1/1 "%02x"' ${PART})
+if [ "$r_mac" == "$w_mac" ]; then
+	echo "Success"
+else
+	echo "Failed"
+fi
+
+jffs2reset -y && reboot

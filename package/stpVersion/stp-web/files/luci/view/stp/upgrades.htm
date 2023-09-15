@@ -1,0 +1,43 @@
+<%#
+         2020-04-11
+-%>
+
+<%+header%>
+
+<h2 name="content"><%:Flash Firmware%> - <%:Verify%></h2>
+<p>
+        <%_ The flash image was uploaded.
+                Below is the checksum and file size listed,
+                compare them with the original file to ensure data integrity.<br />
+                Click "Proceed" below to start the flash procedure. %>
+
+
+</p>
+
+
+<fieldset class="cbi-section">
+        <ul>
+                <li><%:Size%>: <%
+                        local w = require "luci.tools.webadmin"
+                        write(w.byte_format(size))
+
+                        if storage > 0 then
+                                write(luci.i18n.translatef(
+                                        " (%s available)",
+                                        w.byte_format(storage)
+                                ))
+                        end
+                %></li>
+        </ul>
+</fieldset>
+
+<div class="cbi-page-actions right">                          
+        <form class="inline" action="<%=REQUEST_URI%>" method="post">
+                <input type="hidden" name="firm" value="<%=firm%>" />
+                <input type="hidden" name="step" value="2" />       
+                <input class="cbi-button cbi-button-reset" name="cancel" type="submit" value="<%:Cancel%>" />
+                <input class="cbi-button cbi-button-apply" type="submit" value="<%:Proceed%>" />             
+        </form>                                                                                              
+</div>
+
+<%+footer%>

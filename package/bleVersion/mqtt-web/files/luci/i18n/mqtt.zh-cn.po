@@ -1,0 +1,54 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "MQTT"
+msgstr "MQTT"
+
+msgid "General Setting"
+msgstr "基本设置"
+
+msgid "Host"
+msgstr "主机"
+
+msgid "Port"
+msgstr "端口"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Passthrough Mode"
+msgstr "透传模式"
+
+msgid "Publish Topic"
+msgstr "发布主题"
+
+msgid "Public Subscribe Topic"
+msgstr "公共订阅主题"
+
+msgid "Private Subscribe Topic"
+msgstr "订阅主题"
+
+msgid "Firmware URL"
+msgstr "固件下载地址"
+
+msgid "Protocol Version"
+msgstr "协议版本"
+
+msgid "Log Information"
+msgstr "日志信息"
+
+msgid "automatic module"
+msgstr "自动模式启用"
+
+msgid "Filter Rssi"
+msgstr "信号过滤"
+
+msgid "Other Log Information"
+msgstr "其他日志信息"
+
+msgid "Waring: STP or UART2TCP is running. If you want to run MQTT, please stop STP and UART2TCP, otherwise the program will not work properly."
+msgstr "警告：服务STP或UART2TCP正在运行中，如果想要运行MQTT，请停止运行STP和UART2TCP，否则程序将会不正常运行。"
+

@@ -1,0 +1,25 @@
+<%#
+         2020-04-11
+-%>
+
+<%+header%>
+
+	
+<h2 name="content"><%:Flash Firmware Waring%></h2>
+<span style="font-size:24px;"><meta http-equiv="refresh" content='3;URL=<%=luci.dispatcher.build_url("admin", "services", "stp")%>'>
+</span> 
+<div class="cbi-section" id="info-section">
+	<div>
+		<%= msg  or translate("Changes applied.") %>
+	</div>
+</div>
+
+
+<div class="cbi-page-actions right">                          
+        <form class="inline" action="<%=REQUEST_URI%>" method="post">
+                <input type="hidden" name="step" value="2" />
+                <input class="cbi-button cbi-button-apply" type="submit" value="<%:go%>" />             
+        </form>                                                                                              
+</div>
+
+<%+footer%>

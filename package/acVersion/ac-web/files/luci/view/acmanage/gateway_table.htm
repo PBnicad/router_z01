@@ -1,0 +1,87 @@
+
+
+<%+header%>
+
+
+<script type="text/javascript">//<![CDATA[
+
+function tableBuild()
+{
+	// test
+	//var info = '{ "8C:D4:95:00:03:33": [ "192.168.0.61", "169.254.3.51" ], "8C:D4:95:00:09:87": [ "192.168.0.103", "169.254.9.135" ] }';
+	var info = '<%=shareinfo%>'
+	
+	function tableAppend(index, mac, object)
+	{
+		var td_index = document.createElement("td");
+        var text_index = document.createTextNode(index);
+        td_index.appendChild(text_index);
+		
+        var td_mac = document.createElement("td");
+        var text_mac = document.createTextNode(mac);
+        td_mac.appendChild(text_mac);
+		
+        var td_ip = document.createElement("td");
+		var ip_merge = '';
+		for(var i in object) {
+			if(i!=0)
+				ip_merge += ',';
+			ip_merge += '<a href="http://'+ object[i] +'" target="_blank">'+ object[i] + '</a>';
+		}
+		td_ip.innerHTML = ip_merge;
+		
+        var tr = document.createElement("tr");
+		
+        tr.appendChild(td_index);
+        tr.appendChild(td_mac);
+        tr.appendChild(td_ip);
+		
+        var table = document.getElementsByName("gw_table")[0];
+        table.appendChild(tr);
+	}
+	
+	var object = JSON.parse(info);
+	
+	var ipString;
+	var index = 0;
+	for (var mac in object) {
+		if(object[mac] instanceof Object) {
+			ipString = "";
+			index++;
+			tableAppend(index, mac, object[mac]);
+		}
+	}
+}
+
+
+//]]></script>
+
+<style type="text/css">
+table{
+    border: 1px solid;
+    margin: auto;
+    width: 500px;
+}
+
+td,th{
+    text-align: center;
+    border: 1px solid;
+}
+</style>
+
+<h2 name="content"><%:Gatway Information%></h2>
+
+<div class="cbi-section">
+    <h3><%:Gatway Share Information Table%></h3>
+	
+	<div class="cbi-section-node">
+		<div class="table" name="gw_table">
+
+		</div>
+	</div>
+	
+<%+footer%>
+
+<script type="text/javascript">//<![CDATA[
+	tableBuild();
+//]]></script>

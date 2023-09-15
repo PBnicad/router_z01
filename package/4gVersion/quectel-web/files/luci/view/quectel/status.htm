@@ -1,0 +1,14 @@
+<%#
+ Copyright (C) 2019 Kyson Lok <kysonlok@gmail.com>
+ Licensed to the public under the GNU General Public License v3.
+-%>
+
+<% include("cbi/map") %>
+
+<script type="text/javascript">//<![CDATA[
+	(function() {
+		XHR.poll(5, "<%=luci.dispatcher.build_url("admin", "services", "quectel", "status")%>", null, function(x, result) {
+			document.getElementById("_quectel_status").textContent = result["status"] ? "<%:RUNNING%>" : "<%:NOT RUNNING%>";
+		});
+	}());
+//]]></script>

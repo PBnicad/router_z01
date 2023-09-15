@@ -1,0 +1,164 @@
+﻿msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "STP"
+msgstr "STP"
+
+msgid "Serial Transparent Proxy"
+msgstr "串口透传代理"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Server Host"
+msgstr "服务器地址"
+
+msgid "Server Port"
+msgstr "服务器端口"
+
+msgid "Protocol"
+msgstr "协议"
+
+msgid "Serial Port"
+msgstr "串口设备"
+
+msgid "Baud Rate"
+msgstr "波特率"
+
+msgid "Stop Bits"
+msgstr "停止位"
+
+msgid "Parity"
+msgstr "校验方式"
+
+msgid "NOT RUNNING"
+msgstr "未运行"
+
+msgid "RUNNING"
+msgstr "运行中"
+
+msgid "Distance"
+msgstr "距离"
+
+msgid "Set Distance"
+msgstr "设置距离"
+
+msgid "Set Mode"
+msgstr "设置模式"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Set Role"
+msgstr "设置角色"
+
+msgid "Clock"
+msgstr "时钟"
+
+msgid "Set Clock Status"
+msgstr "设置时钟状态"
+
+msgid "Configuration"
+msgstr "配置"
+
+msgid "test"
+msgstr "测试模式"
+
+msgid "toda"
+msgstr "toda模式"
+
+msgid "tof"
+msgstr "tof模式"
+
+msgid "main"
+msgstr "主基站"
+
+msgid "aux"
+msgstr "从基站"
+
+msgid "enable"
+msgstr "开启"
+
+msgid "distance"
+msgstr "关闭"
+
+msgid "set role fail"
+msgstr "配置角色失败"
+
+msgid "set clock synchronize status fail"
+msgstr "配置时钟同步状态失败"
+
+msgid "set mode fail"
+msgstr "配置模式失败"
+
+msgid "set distance fail"
+msgstr "配置距离失败"
+
+msgid "Get parameters fail ! Please check connect !"
+msgstr "获取参数失败，清检查连接！"
+
+msgid "set clock synchronize status success"
+msgstr "配置时钟状态成功"
+
+msgid "set role success"
+msgstr "配置角色成功"
+
+msgid "set mode success"
+msgstr "配置模式成功"
+
+msgid "set distance success"
+msgstr "配置距离成功"
+
+msgid "STP is not running"
+msgstr "STP没有在运行"
+
+msgid "Please start Stp"
+msgstr "请启动stp"
+
+msgid "It will automatically jump to the stp startup page after 3 seconds or click go to jump."
+msgstr "将于3秒后自动跳转stp启动页面或者点击go跳转"
+
+msgid "Upgrade Firmware Waring"
+msgstr "升级固件警告"
+
+msgid "Firmware"
+msgstr "固件"
+
+msgid "upgraded..."
+msgstr "更新中..."
+
+msgid "Stp Operations"
+msgstr "Stp操作"
+
+msgid "Configuration parameters"
+msgstr "配置参数"
+
+msgid "panId(00~FF)"
+msgstr "区域ID(00~FF)"
+
+msgid "version"
+msgstr "版本"
+
+msgid "Dimension"
+msgstr "维度"
+
+msgid "Upload a upgrade-compatible firmware here to replace the running firmware."
+msgstr "上传一个升级兼容的固件来替换正在运行的固件。"
+
+msgid "The firmware is being upgraded now."
+msgstr "固件正在更新."
+
+msgid "DO NOT POWER OFF THE DEVICE!"
+msgstr "注意不要关闭设备电源!"
+
+msgid "Wait a few minutes."
+msgstr "大约等待几分钟后即可升级完成."
+
+msgid "Waring: UART2TCP or MQTT is running. If you want to run STP, please stop UART2TCP and MQTT, otherwise the program will not work properly."
+msgstr "警告：服务UART2TCP或MQTT正在运行中，如果想要运行STP，请停止运行UART2TCP和MQTT，否则程序将会不正常运行。"
+
+
+

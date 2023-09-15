@@ -1,0 +1,26 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "UART2TCP"
+msgstr "UART2TCP"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "General Setting"
+msgstr "基本设置"
+
+msgid "Server Address"
+msgstr "服务器地址"
+
+msgid "Server Port"
+msgstr "服务器端口"
+
+msgid "NOT RUNNING"
+msgstr "未运行"
+
+msgid "RUNNING"
+msgstr "运行中"
+
+msgid "Waring: STP or MQTT is running. If you want to run UART2TCP, please stop STP and MQTT, otherwise the program will not work properly."
+msgstr "警告: 服务STP或MQTT正在运行中。如果想要运行UART2TCP，请停止运行STP和MQTT，否则程序将会不正常运行。"

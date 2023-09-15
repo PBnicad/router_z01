@@ -1,0 +1,163 @@
+#!/bin/sh /etc/rc.common
+
+START=10
+
+VENDORS="IMYFIT"
+
+fix_system() {
+	uci set system.@system[0].hostname="$VENDORS"
+	uci set system.@system[0].zonename='Asia/Shanghai'
+	uci commit system
+	/lib/imyfit/settiming.sh
+}
+
+fix_network() {
+
+	uci delete network.wan6
+	uci delete network.lan_dev
+	uci delete network.wan_dev
+	
+	uci commit network
+
+	#if false then
+	#	uci set network.wan.ifname="eth0"
+	#	uci set network.wan.hostname="$VENDORS"
+	#
+	#	uci set network.lan.ifname="eth2"
+	#	uci set network.lan.ipaddr="192.168.8.1"
+	#	
+	#	uci commit network
+	#fi
+
+	uci set network.wan.proto="dhcp"
+	uci set network.wan.ifname="eth0.2"
+	uci set network.wan.hostname="$VENDORS"
+	
+	uci set network.lan.ifname="eth0.1"
+	uci set network.lan.ipaddr="192.168.8.1"
+	
+	uci add network switch
+	uci add network switch_vlan
+	uci add network switch_vlan
+	uci commit network
+
+	uci set network.@switch[0].name="switch0"
+	uci set network.@switch[0].reset="1"
+	uci set network.@switch[0].enable_vlan="1"
+	uci commit network
+
+	uci set network.@switch_vlan[0].device="switch0"
+	uci set network.@switch_vlan[0].vlan="1"
+	uci set network.@switch_vlan[0].ports="1 6t"
+
+	uci set network.@switch_vlan[1].device="switch0"
+	uci set network.@switch_vlan[1].vlan="2"
+	uci set network.@switch_vlan[1].ports="0 6t"
+
+	uci commit network
+
+	uci set network.wwan0=interface
+	uci commit network
+	
+	uci set network.wwan0.ifname="wwan0"
+	#uci set network.wwan0.proto="qmi"	这里不定义协议是因为4G拨号上网是在另一个c程序拨号的,仅定义个接口
+	#uci set network.wwan0.apn="cnnet"
+	#uci set network.wwan0.device="/dev/cdc-wdm0"
+	uci commit network
+	
+	uci set network.trm_wwan=interface	#创建无线网络使用的网络接口
+	uci commit network
+	
+	uci set network.trm_wwan.proto="dhcp"
+	uci commit network
+	
+	uci add_list firewall.@zone[1].network='wwan0'
+	uci commit firewall
+	
+	uci add_list dhcp.@dnsmasq[0].notinterface="eth0.2"
+	uci add_list dhcp.@dnsmasq[0].server="202.96.128.86"
+	uci add_list dhcp.@dnsmasq[0].server="114.114.114.114"
+	uci add_list dhcp.@dnsmasq[0].server="101.226.4.6"
+	uci commit dhcp
+	
+	uci set firewall.@zone[1].input="ACCEPT"
+	uci commit firewall
+	
+	cp /etc/config/wireless /tmp/wireless.backup
+}
+
+fix_wireless() {
+	. /lib/functions.sh
+	. /lib/imyfit/utils.sh
+
+	local part offset
+	local ssid ssid_mac
+	local board=$(board_name)
+
+	# SSID
+	case "$board" in
+		cositea,z01)
+			part="/dev/mtd2"
+			offset=$((0x4))
+			;;
+	esac
+
+	ssid_mac=$(mac_suffix "$part" $offset)
+	ssid="${VENDORS}-${ssid_mac}"
+
+	# Setting wireless uci file
+	config_cb() {
+		local type="$1"
+		local section="$2"
+		local channel mode
+		local ssid_mac=$(mac_suffix /dev/mtd2)
+
+		case "$type" in
+			wifi-device)
+				channel=$(uci get wireless.${section}.channel)
+				if [ $((channel)) -ge 36 ]; then
+					# 5GHz
+					BAND="5ghz"
+					uci set wireless.${section}.hwmode="11ac"
+					uci set wireless.${section}.htmode="VHT80"
+					uci set wireless.${section}.disabled="0"
+				else
+					# 2.4GHz
+					BAND="24ghz"
+					uci set wireless.${section}.hwmode="11n"
+					uci set wireless.${section}.htmode="HT40"
+					uci set wireless.${section}.disabled="0"
+				fi
+				;;
+			wifi-iface)
+				mode=$(uci get wireless.${section}.mode)
+				if [ "$mode" = "ap" ]; then
+					if [ "$BAND" = "5ghz" ]; then
+						uci set wireless.${section}.ssid="$ssid-5G"
+					else
+						uci set wireless.${section}.ssid="$ssid"
+					fi
+					uci set wireless.${section}.key="goodlife"
+					uci set wireless.${section}.encryption="psk-mixed"
+				fi
+				;;
+		esac
+	}
+	config_load wireless
+	uci commit wireless
+}
+
+
+start() {
+	local hostname
+
+	hostname=$(uci get system.@system[0].hostname)
+	if [ "$hostname" != "$VENDORS" ]; then
+		# First time run, fix the configuration files
+		fix_system
+		fix_network
+		fix_wireless
+	fi
+
+	/etc/init.d/cositea_init disable
+}
